@@ -102,8 +102,8 @@ class DocumentPreprocessor:
         # Check PyMuPDF
         if fitz is None:
             raise RuntimeError(
-                "PyMuPDF is not installed. "
-                "Install it using: python -m pip install PyMuPDF"
+                "PyMuPDF (pymupdf) is required to process PDF documents. "
+                "Please install it using: pip install PyMuPDF"
             )
 
         try:
@@ -440,7 +440,7 @@ class DocumentPreprocessor:
                         image_height // 2
                     )
 
-                    rotation_matrix = cv2.getRotationMatrix2D(
+                    M = cv2.getRotationMatrix2D(
                         center,
                         angle,
                         1.0
@@ -448,7 +448,7 @@ class DocumentPreprocessor:
 
                     gray = cv2.warpAffine(
                         gray,
-                        rotation_matrix,
+                        M,
                         (
                             image_width,
                             image_height
