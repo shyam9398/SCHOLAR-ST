@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { authService } from "../services/authService";
-import { consumerService, type ConsumerUser } from "../services/consumerService";
-import type { UserProfile } from "../types/platform";
-import { Shield, Loader2, UserCheck } from "lucide-react";
+import type { UserProfile, UserRole } from "../types/platform";
+import { Shield, Loader2, GraduationCap } from "lucide-react";
 
 interface ProtectedRouteProps {
-  allowedRole?: "admin" | "inspector" | "consumer";
+  allowedRole?: UserRole | string;
+  allowedRoles?: Array<UserRole | string>;
 }
 
-export default function ProtectedRoute({ allowedRole }: ProtectedRouteProps) {
-  const [officerUser, setOfficerUser] = useState<UserProfile | null>(null);
-  const [consumerUser, setConsumerUser] = useState<ConsumerUser | null>(null);
+export default function ProtectedRoute({ allowedRole, allowedRoles }: ProtectedRouteProps) {
+  const location = useLocation();
+  const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -19,23 +19,14 @@ export default function ProtectedRoute({ allowedRole }: ProtectedRouteProps) {
 
     async function checkAuth() {
       try {
-        if (allowedRole === "consumer") {
-          const user = await consumerService.getCurrentUser();
-          if (isMounted) {
-            setConsumerUser(user);
-            setLoading(false);
-          }
-        } else {
-          const currentUser = await authService.getCurrentUser();
-          if (isMounted) {
-            setOfficerUser(currentUser);
-            setLoading(false);
-          }
+        const user = await authService.getCurrentUser();
+        if (isMounted) {
+          setCurrentUser(user);
+          setLoading(false);
         }
       } catch {
         if (isMounted) {
-          setOfficerUser(null);
-          setConsumerUser(null);
+          setCurrentUser(null);
           setLoading(false);
         }
       }
@@ -46,10 +37,10 @@ export default function ProtectedRoute({ allowedRole }: ProtectedRouteProps) {
     return () => {
       isMounted = false;
     };
-  }, [allowedRole]);
+  }, [location.pathname]);
 
   if (loading) {
-    const isCitizen = allowedRole === "consumer";
+    const isApplicant = allowedRole === "applicant" || allowedRoles?.includes("applicant");
     return (
       <div
         style={{
@@ -58,58 +49,77 @@ export default function ProtectedRoute({ allowedRole }: ProtectedRouteProps) {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: "#f8fafc",
-          gap: "1rem",
+          backgroundColor: "#070d1e",
+          gap: "1.25rem",
         }}
       >
         <div
           style={{
-            width: "56px",
-            height: "56px",
-            borderRadius: "12px",
-            backgroundColor: isCitizen ? "#047857" : "#1e293b",
+            width: "60px",
+            height: "60px",
+            borderRadius: "14px",
+            background: isApplicant
+              ? "linear-gradient(135deg, #16a34a 0%, #15803d 100%)"
+              : "linear-gradient(135deg, #1e3a8a 0%, #0284c7 100%)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             color: "#ffffff",
-            boxShadow: "0 4px 14px rgba(15, 23, 42, 0.15)",
+            boxShadow: "0 8px 20px rgba(0, 0, 0, 0.4)",
           }}
         >
-          {isCitizen ? <UserCheck size={28} /> : <Shield size={28} />}
+          {isApplicant ? <GraduationCap size={32} /> : <Shield size={32} />}
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: "#475569", fontSize: "0.9rem", fontWeight: 600 }}>
-          <Loader2 size={18} className="spin" style={{ animation: "spin 1s linear infinite" }} />
-          <span>{isCitizen ? "Verifying Citizen Portal session..." : "Verifying enforcement credentials..."}</span>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "0.6rem",
+            color: "#94a3b8",
+            fontSize: "0.92rem",
+            fontWeight: 600,
+          }}
+        >
+          <Loader2
+            size={20}
+            className="spin"
+            style={{ animation: "spin 1s linear infinite", color: "#38bdf8" }}
+          />
+          <span>Verifying SCHOLAR-ST authorization &amp; role credentials...</span>
         </div>
       </div>
     );
   }
 
-  // Consumer path
-  if (allowedRole === "consumer") {
-    if (!consumerUser) {
-      consumerService.clearSession();
-      return <Navigate to="/user/login" replace />;
-    }
-    return <Outlet />;
+  // Not authenticated -> redirect to login
+  if (!currentUser || !currentUser.is_active || !authService.isAuthenticated()) {
+    authService.clearSession();
+    return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  // Officer / Admin path
-  if (!officerUser || !officerUser.is_active) {
-    authService.clearSession();
-    return <Navigate to="/login" replace />;
+  // Role validation
+  const rolesList: string[] = [];
+  if (allowedRole) rolesList.push(allowedRole.toLowerCase());
+  if (allowedRoles) {
+    rolesList.push(...allowedRoles.map((r) => r.toLowerCase()));
   }
 
-  // Role protection check
-  if (allowedRole && officerUser.role?.toLowerCase() !== allowedRole.toLowerCase()) {
-    if (officerUser.role?.toLowerCase() === "admin") {
-      return <Navigate to="/admin" replace />;
+  if (rolesList.length > 0) {
+    const userRole = (currentUser.role || "").toLowerCase();
+
+    // Map officer and inspector as equivalent
+    const isOfficerMatch =
+      (rolesList.includes("officer") || rolesList.includes("inspector")) &&
+      (userRole === "officer" || userRole === "inspector");
+
+    const isMatch = rolesList.includes(userRole) || isOfficerMatch;
+
+    if (!isMatch) {
+      // User is authenticated but NOT authorized for this role's portal.
+      // Strict role isolation: Redirect to their own authorized dashboard.
+      const redirectPath = authService.getDashboardPath(userRole);
+      return <Navigate to={redirectPath} replace />;
     }
-    if (officerUser.role?.toLowerCase() === "inspector") {
-      return <Navigate to="/inspector" replace />;
-    }
-    authService.clearSession();
-    return <Navigate to="/login" replace />;
   }
 
   return <Outlet />;

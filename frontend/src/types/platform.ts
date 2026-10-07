@@ -1,7 +1,4 @@
-import type { ComplianceRuleResult } from "./compliance";
-import type { ProductData } from "./ocr";
-
-export type UserRole = "admin" | "inspector" | "ADMIN" | "INSPECTOR";
+export type UserRole = "admin" | "officer" | "inspector" | "applicant" | "ADMIN" | "INSPECTOR";
 
 export interface UserProfile {
   id: string;
@@ -100,9 +97,9 @@ export interface InspectionRecord {
   created_at: string;
   updated_at?: string;
   product?: any;
-  products?: ProductData | null;
+  products?: any;
   profiles?: UserProfile | null;
-  compliance_results?: ComplianceRuleResult[];
+  compliance_results?: any[];
   ocr_results?: any[];
   visual_analysis?: any;
   inspection_evidence?: any[];

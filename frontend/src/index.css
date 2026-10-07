@@ -4,17 +4,21 @@
   --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
-  /* Government & Enterprise Palette */
-  --gov-navy-950: #0b1329;
-  --gov-navy-900: #0f172a;
-  --gov-navy-800: #1e293b;
-  --gov-navy-700: #334155;
-  --gov-navy-600: #475569;
+  /* Government & Education Palette (SCHOLAR-ST) */
+  --gov-navy-950: #07152f;
+  --gov-navy-900: #0f3b7a; /* Primary Sovereign Government Blue */
+  --gov-navy-800: #1a4f9c;
+  --gov-navy-700: #2b6cb0;
+  --gov-navy-600: #3182ce;
 
-  --gov-blue-600: #2563eb;
+  --gov-blue-800: #0f3b7a;
   --gov-blue-700: #1d4ed8;
+  --gov-blue-600: #2563eb;
+  --gov-blue-500: #3b82f6;
   --gov-blue-50: #eff6ff;
+  --gov-blue-100: #dbeafe;
 
+  /* Clean White Canvas */
   --bg-app: #f8fafc;
   --bg-card: #ffffff;
   --bg-subtle: #f1f5f9;
@@ -22,43 +26,38 @@
   --border-color-hover: #cbd5e1;
 
   --text-main: #0f172a;
-  --text-muted: #64748b;
-  --text-subtle: #94a3b8;
+  --text-muted: #475569;
+  --text-subtle: #64748b;
 
-  /* Status Colors */
-  --pass-color: #059669;
-  --pass-bg: #ecfdf5;
-  --pass-border: #a7f3d0;
-  --pass-text: #064e3b;
+  /* Minimal Statutory Status Colors */
+  --statutory-gold: #b45309;
+  --statutory-gold-bg: #fffbeb;
+  --statutory-gold-border: #fde68a;
 
-  --fail-color: #dc2626;
-  --fail-bg: #fef2f2;
-  --fail-border: #fecaca;
-  --fail-text: #7f1d1d;
+  --status-approved: #15803d;
+  --status-approved-bg: #f0fdf4;
+  --status-approved-border: #bbf7d0;
 
-  --review-color: #d97706;
-  --review-bg: #fffbeb;
-  --review-border: #fde68a;
-  --review-text: #78350f;
+  --status-deficiency: #b45309;
+  --status-deficiency-bg: #fffbeb;
+  --status-deficiency-border: #fde68a;
 
-  --na-color: #64748b;
-  --na-bg: #f8fafc;
-  --na-border: #e2e8f0;
-  --na-text: #334155;
+  --status-rejected: #b91c1c;
+  --status-rejected-bg: #fef2f2;
+  --status-rejected-border: #fecaca;
 
-  --oos-color: #475569;
-  --oos-bg: #f1f5f9;
-  --oos-border: #cbd5e1;
-  --oos-text: #1e293b;
+  --status-review: #0369a1;
+  --status-review-bg: #f0f9ff;
+  --status-review-border: #bae6fd;
 
-  /* Shadow Token */
+  /* Shadow Tokens */
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.03);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.06), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 2px 6px -1px rgba(0, 0, 0, 0.06), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.02);
 
   --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
 }
 
 * {
@@ -743,9 +742,9 @@ a:hover { text-decoration: underline; }
   text-decoration: none;
 }
 
-/* Feature Pillars ("Why METRIScan?") */
+/* Feature Pillars ("Why SCHOLAR-ST?") */
 .why-section {
-  background-color: #f8fafc;
+  background-color: #ffffff;
   border-top: 1px solid var(--border-color);
   border-bottom: 1px solid var(--border-color);
   padding: 4rem 1.5rem;

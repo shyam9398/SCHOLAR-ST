@@ -5,332 +5,128 @@ import {
   Navigate,
 } from "react-router-dom";
 
-// Authentication
+// Public Pages
+import { LandingPage } from "./pages/LandingPage";
 import Login from "./pages/Login";
+import Register from "./pages/Register";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
+import Unauthorized from "./pages/Unauthorized";
+
+// Protected Route Guard
 import ProtectedRoute from "./components/ProtectedRoute";
 
-// Landing Page
-import { LandingPage } from "./pages/LandingPage";
+// Layout
+import { ScholarLayout } from "./components/layout/ScholarLayout";
 
-// Existing Inspector components
-import { Scanner } from "./pages/Scanner";
-import { History } from "./pages/History";
-import { HistoryDetail } from "./pages/HistoryDetail";
-import { Settings } from "./pages/Settings";
+// Applicant Portal Pages
+import ApplicantDashboard from "./pages/applicant/ApplicantDashboard";
+import CasteValidationPage from "./pages/applicant/CasteValidationPage";
+import SchemeCataloguePage from "./pages/applicant/SchemeCataloguePage";
+import ApplicationWizard from "./pages/applicant/ApplicationWizard";
+import ApplicationDetailPage from "./pages/applicant/ApplicationDetailPage";
+import ApplicantApplicationsPage from "./pages/applicant/ApplicantApplicationsPage";
+import ApplicantProfilePage from "./pages/applicant/ApplicantProfilePage";
+import DocumentVerificationPage from "./pages/applicant/DocumentVerificationPage";
+import EvidenceVerificationReportPage from "./pages/applicant/EvidenceVerificationReportPage";
+import CrossSchemeIntelligencePage from "./pages/applicant/CrossSchemeIntelligencePage";
+import ApplicantNotificationsPage from "./pages/applicant/ApplicantNotificationsPage";
 
-// Inspector Portal
-import { InspectorDashboard } from "./pages/inspector/InspectorDashboard";
-import { InspectorReports } from "./pages/inspector/InspectorReports";
-import { InspectorRules } from "./pages/inspector/InspectorRules";
+// Officer Portal Pages
+import OfficerDashboard from "./pages/officer/OfficerDashboard";
+import OfficerQueue from "./pages/officer/OfficerQueue";
+import VerificationWorkbench from "./pages/officer/VerificationWorkbench";
+import OfficerDossiers from "./pages/officer/OfficerDossiers";
+import OfficerDeficienciesPage from "./pages/officer/OfficerDeficienciesPage";
 
-// Admin Portal
-import { AdminDashboard } from "./pages/admin/AdminDashboard";
-import { AdminInspectors } from "./pages/admin/AdminInspectors";
-import { AdminInspections } from "./pages/admin/AdminInspections";
-import { AdminAnalytics } from "./pages/admin/AdminAnalytics";
-import { AdminReports } from "./pages/admin/AdminReports";
+// Admin Portal Pages
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import { AdminSchemes } from "./pages/admin/AdminSchemes";
 import { AdminRules } from "./pages/admin/AdminRules";
-import { AdminNotifications } from "./pages/admin/AdminNotifications";
+import { AdminOfficers } from "./pages/admin/AdminOfficers";
+import { AdminAnalytics } from "./pages/admin/AdminAnalytics";
 import { AdminLogs } from "./pages/admin/AdminLogs";
-import { AdminUserScanIssues } from "./pages/admin/AdminUserScanIssues";
-import { AdminUserIssues } from "./pages/admin/AdminUserIssues";
-
-// Consumer / Citizen Portal
-import ConsumerLogin from "./pages/consumer/ConsumerLogin";
-import ConsumerSignup from "./pages/consumer/ConsumerSignup";
-import { ConsumerLayout } from "./pages/consumer/ConsumerLayout";
-import ConsumerDashboard from "./pages/consumer/ConsumerDashboard";
-import ConsumerScanner from "./pages/consumer/ConsumerScanner";
-import ConsumerScanResult from "./pages/consumer/ConsumerScanResult";
-import ConsumerScansList from "./pages/consumer/ConsumerScansList";
-import ConsumerSubmitIssue from "./pages/consumer/ConsumerSubmitIssue";
-import ConsumerIssuesList from "./pages/consumer/ConsumerIssuesList";
-import ConsumerCommunityFeed from "./pages/consumer/ConsumerCommunityFeed";
-import ConsumerProfile from "./pages/consumer/ConsumerProfile";
-import MultiScanProducts from "./pages/MultiScanProducts";
+import AdminUsersPage from "./pages/admin/AdminUsersPage";
 
 
 function App() {
-
   return (
-
     <BrowserRouter>
-
       <Routes>
+        {/* ========================================================= */}
+        {/* PUBLIC AUTH & LANDING ROUTES                              */}
+        {/* ========================================================= */}
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/unauthorized" element={<Unauthorized />} />
 
         {/* ========================================================= */}
-        {/* PUBLIC ROUTES                                             */}
+        {/* PROTECTED SCHOLAR-ST PORTAL WITH ROLE-BASED ACCESS CONTROL */}
         {/* ========================================================= */}
+        <Route element={<ScholarLayout />}>
+          {/* APPLICANT PORTAL - STRICTLY APPLICANT ROLE */}
+          <Route element={<ProtectedRoute allowedRole="applicant" />}>
+            <Route path="/applicant" element={<ApplicantDashboard />} />
+            <Route path="/applicant/caste-validation" element={<CasteValidationPage />} />
+            <Route path="/applicant/documents" element={<DocumentVerificationPage />} />
+            <Route path="/applicant/document-verification" element={<DocumentVerificationPage />} />
+            <Route path="/applicant/schemes" element={<SchemeCataloguePage />} />
+            <Route path="/applicant/cross-scheme-intelligence" element={<CrossSchemeIntelligencePage />} />
+            <Route path="/applicant/apply" element={<ApplicationWizard />} />
+            <Route path="/applicant/applications" element={<ApplicantApplicationsPage />} />
+            <Route path="/applicant/applications/:id" element={<ApplicationDetailPage />} />
+            <Route path="/applicant/applications/:id/verification-report" element={<EvidenceVerificationReportPage />} />
+            <Route path="/applicant/profile" element={<ApplicantProfilePage />} />
+            <Route path="/applicant/notifications" element={<ApplicantNotificationsPage />} />
+          </Route>
 
-        <Route
-          path="/"
-          element={<LandingPage />}
-        />
+          {/* VERIFICATION OFFICER WORKBENCH - OFFICER / INSPECTOR ROLE */}
+          <Route element={<ProtectedRoute allowedRoles={["officer", "inspector"]} />}>
+            <Route path="/officer" element={<OfficerDashboard />} />
+            <Route path="/officer/pending" element={<OfficerQueue />} />
+            <Route path="/officer/applications" element={<OfficerQueue />} />
+            <Route path="/officer/queue" element={<OfficerQueue />} />
+            <Route path="/officer/deficiencies" element={<OfficerDeficienciesPage />} />
+            <Route path="/officer/reports" element={<OfficerDossiers />} />
+            <Route path="/officer/verify/:id" element={<VerificationWorkbench />} />
+            <Route path="/officer/verify/:id/report" element={<EvidenceVerificationReportPage />} />
+            <Route path="/officer/applications/:id/verification-report" element={<EvidenceVerificationReportPage />} />
+            <Route path="/officer/completed" element={<OfficerQueue />} />
+            <Route path="/officer/dossiers" element={<OfficerDossiers />} />
+            <Route path="/officer/guidelines" element={<SchemeCataloguePage />} />
+          </Route>
 
-        <Route
-          path="/login"
-          element={<Login />}
-        />
+          {/* SHARED VERIFICATION REPORT ROUTE */}
+          <Route path="/applications/:id/verification-report" element={<EvidenceVerificationReportPage />} />
 
-        {/* Citizen Auth Public Routes */}
-        <Route
-          path="/user/login"
-          element={<ConsumerLogin />}
-        />
-
-        <Route
-          path="/user/signup"
-          element={<ConsumerSignup />}
-        />
-
-
-        {/* ========================================================= */}
-        {/* CONSUMER / CITIZEN PROTECTED ROUTES                       */}
-        {/* ========================================================= */}
-
-        <Route element={<ProtectedRoute allowedRole="consumer" />}>
-          <Route element={<ConsumerLayout />}>
-            <Route path="/user" element={<ConsumerDashboard />} />
-            <Route path="/user/scan" element={<ConsumerScanner />} />
-            <Route path="/user/multi-scan" element={<MultiScanProducts />} />
-            <Route path="/user/multi-scan/:sessionId" element={<MultiScanProducts />} />
-            <Route path="/user/scans" element={<ConsumerScansList />} />
-            <Route path="/user/scans/:id" element={<ConsumerScanResult />} />
-            <Route path="/user/report-issue" element={<ConsumerSubmitIssue />} />
-            <Route path="/user/issues" element={<ConsumerIssuesList />} />
-            <Route path="/user/community" element={<ConsumerCommunityFeed />} />
-            <Route path="/user/profile" element={<ConsumerProfile />} />
+          {/* ADMIN GOVERNANCE PORTAL - STRICTLY ADMIN ROLE */}
+          <Route element={<ProtectedRoute allowedRole="admin" />}>
+            <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/admin/schemes" element={<AdminSchemes />} />
+            <Route path="/admin/rules" element={<AdminRules />} />
+            <Route path="/admin/users" element={<AdminUsersPage />} />
+            <Route path="/admin/officers" element={<AdminOfficers />} />
+            <Route path="/admin/analytics" element={<AdminAnalytics />} />
+            <Route path="/admin/rule-history" element={<AdminLogs />} />
+            <Route path="/admin/logs" element={<AdminLogs />} />
           </Route>
         </Route>
 
-
         {/* ========================================================= */}
-        {/* INSPECTOR PROTECTED ROUTES                               */}
+        {/* BACKWARD COMPATIBILITY / REDIRECTS                       */}
         {/* ========================================================= */}
+        <Route path="/inspector/*" element={<Navigate to="/officer" replace />} />
+        <Route path="/inspector" element={<Navigate to="/officer" replace />} />
+        <Route path="/user/*" element={<Navigate to="/applicant" replace />} />
+        <Route path="/user" element={<Navigate to="/applicant" replace />} />
+        <Route path="/dashboard" element={<Navigate to="/applicant" replace />} />
 
-        <Route
-          element={
-            <ProtectedRoute allowedRole="inspector" />
-          }
-        >
-
-          <Route
-            path="/inspector"
-            element={<InspectorDashboard />}
-          />
-
-          <Route
-            path="/inspector/scan"
-            element={<Scanner />}
-          />
-
-          <Route
-            path="/inspector/multi-scan"
-            element={<MultiScanProducts />}
-          />
-
-          <Route
-            path="/inspector/multi-scan/:sessionId"
-            element={<MultiScanProducts />}
-          />
-
-          <Route
-            path="/inspector/history"
-            element={<History />}
-          />
-
-          <Route
-            path="/inspector/history/:id"
-            element={<HistoryDetail />}
-          />
-
-          <Route
-            path="/inspector/reports"
-            element={<InspectorReports />}
-          />
-
-          <Route
-            path="/inspector/rules"
-            element={<InspectorRules />}
-          />
-
-          <Route
-            path="/inspector/settings"
-            element={<Settings />}
-          />
-
-        </Route>
-
-
-        {/* ========================================================= */}
-        {/* ADMIN PROTECTED ROUTES                                   */}
-        {/* ========================================================= */}
-
-        <Route
-          element={
-            <ProtectedRoute allowedRole="admin" />
-          }
-        >
-
-          <Route
-            path="/admin"
-            element={<AdminDashboard />}
-          />
-
-          <Route
-            path="/admin/inspectors"
-            element={<AdminInspectors />}
-          />
-
-          <Route
-            path="/admin/inspections"
-            element={<AdminInspections />}
-          />
-
-          <Route
-            path="/admin/user-scan-issues"
-            element={<AdminUserScanIssues />}
-          />
-
-          <Route
-            path="/admin/user-issues"
-            element={<AdminUserIssues />}
-          />
-
-          <Route
-            path="/admin/analytics"
-            element={<AdminAnalytics />}
-          />
-
-          <Route
-            path="/admin/reports"
-            element={<AdminReports />}
-          />
-
-          <Route
-            path="/admin/rules"
-            element={<AdminRules />}
-          />
-
-          <Route
-            path="/admin/notifications"
-            element={<AdminNotifications />}
-          />
-
-          <Route
-            path="/admin/logs"
-            element={<AdminLogs />}
-          />
-
-          <Route
-            path="/admin/settings"
-            element={<Settings />}
-          />
-
-        </Route>
-
-
-        {/* ========================================================= */}
-        {/* BACKWARD COMPATIBILITY                                   */}
-        {/* ========================================================= */}
-
-        <Route
-          path="/dashboard"
-          element={
-            <Navigate
-              to="/inspector"
-              replace
-            />
-          }
-        />
-
-        <Route
-          path="/scanner"
-          element={
-            <Navigate
-              to="/inspector/scan"
-              replace
-            />
-          }
-        />
-
-        <Route
-          path="/multi-scan"
-          element={
-            <Navigate
-              to="/inspector/multi-scan"
-              replace
-            />
-          }
-        />
-
-        <Route
-          path="/multi-scan/:sessionId"
-          element={
-            <Navigate
-              to="/inspector/multi-scan"
-              replace
-            />
-          }
-        />
-
-        <Route
-          path="/history"
-          element={
-            <Navigate
-              to="/inspector/history"
-              replace
-            />
-          }
-        />
-
-        <Route
-          path="/history/:id"
-          element={
-            <Navigate
-              to="/inspector/history"
-              replace
-            />
-          }
-        />
-
-        <Route
-          path="/scan-result/:id"
-          element={
-            <Navigate
-              to="/inspector/history"
-              replace
-            />
-          }
-        />
-
-        <Route
-          path="/settings"
-          element={
-            <Navigate
-              to="/inspector/settings"
-              replace
-            />
-          }
-        />
-
-
-        {/* ========================================================= */}
-        {/* CATCH ALL                                                */}
-        {/* ========================================================= */}
-
-        <Route
-          path="*"
-          element={
-            <Navigate
-              to="/"
-              replace
-            />
-          }
-        />
-
+        {/* Catch All */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-
     </BrowserRouter>
   );
 }

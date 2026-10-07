@@ -19,7 +19,7 @@ const TRANSLATIONS: Record<string, TranslationSchema> = {
   gu: hi,
 };
 
-const STORAGE_KEY = "metriscan_preferred_language";
+const STORAGE_KEY = "scholarst_preferred_language";
 
 interface LanguageContextType {
   language: SupportedLanguage;

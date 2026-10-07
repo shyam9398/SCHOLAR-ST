@@ -91,7 +91,7 @@ def create_admin():
 
     print()
     print("=" * 60)
-    print("       METRISCAN - CREATE INITIAL ADMIN")
+    print("    SCHOLAR-ST - CREATE INITIAL PORTAL ADMINISTRATOR")
     print("=" * 60)
     print()
 
@@ -210,7 +210,7 @@ def create_admin():
 
     auth_email = (
         username +
-        "@metriscanauth.local"
+        "@scholarstauth.local"
     )
 
 
