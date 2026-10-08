@@ -84,34 +84,34 @@ SCHOLAR-ST follows a modular architecture connecting the applicant, AI services,
 ### Architecture Flow
 
 
-                                                        Applicant
-                                                           ↓
-                                                        Web Application
-                                                           ↓
-                                                        FastAPI Backend
-                                                           ↓
-                                                        Document Processing
-                                                           ↓
-                                                        OCR + AI Intelligence
-                                                           ↓
-                                                        Dynamic Rule Engine
-                                                           ↓
-                                                        Evidence & Verification Report
-                                                           ↓
-                                                        Officer Review
-                                                           ↓
-                                                        Deficiency Detected?
-                                                           ├── Yes → Applicant Resubmission
-                                                           │            ↓
-                                                           │       Document Revalidation
-                                                           │            ↓
-                                                           │       Evidence & Verification Report
-                                                           │            ↓
-                                                           │       Officer Review
-                                                           │
-                                                           └── No → Final Decision
-                                                                        ↓
-                                                                Status & Notifications
+                                                      Applicant
+                                                          ↓
+                                                    Web Application
+                                                          ↓
+                                                    FastAPI Backend
+                                                          ↓
+                                                   Document Processing
+                                                          ↓
+                                                  OCR + AI Intelligence
+                                                          ↓
+                                                   Dynamic Rule Engine
+                                                          ↓
+                                               Evidence & Verification Report
+                                                          ↓
+                                                     Officer Review
+                                                          ↓
+                                                   Deficiency Detected?
+                                                          ├── Yes → Applicant Resubmission
+                                                          │            ↓
+                                                          │       Document Revalidation
+                                                          │            ↓
+                                                          │       Evidence & Verification Report
+                                                          │            ↓
+                                                          │       Officer Review
+                                                          │
+                                                          └── No → Final Decision
+                                                                       ↓
+                                                                  Status & Notifications
 
 
 ## 🛠️ Tech Stack
